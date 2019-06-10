@@ -10,10 +10,6 @@ class User {
         this.password = password;
     }
 
-    async checkPassword(hashedPassword) {
-        return bcrypt.compareSync(this.password, hashedPassword);
-    }
-
     async save() {
         try {
             const response = await db.one(`
@@ -30,19 +26,35 @@ class User {
         }
     }
 
+    async getOneUser() {
+        try {
+            const userData = await db.one(`
+                select id, first_name, last_name, password
+                    from users 
+                where email = $1
+                `, [this.email]);
+            return userData;
+        } catch(err) {
+            return err.message;
+        }
+    }
+
     async login() {
         try {
             const response = await db.one(`
-                select if, first_name, last_name, password
+                select id, first_name, last_name, password
                     from users
-                where email = $1`, [this.email]);
-                console.log('hash is', response.password);
-                const isValid = await this.checkPassword(response.password);
-                if (!!isValid) {
-                    const { first_name, last_name, id } = response
+                where email = $1
+                `, [this.email]);
+            console.log('hash is', response.password);
+            const valid = this.checkPassword(userData.password);
+                if (!!valid) {
+                    const { first_name, last_name, id } = userData
+                    return { isValid: valid, first_name, last_name, user_id: id };
                 } else {
-                    return { isValid }
-                };
+                    return { isValid: valid }
+                }
+                
         } catch(err) {
             return err.message;
         }
