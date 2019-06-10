@@ -1,0 +1,26 @@
+<head>
+    <meta charset="utf-8">
+    <title>Express Demo with ES6 Render Templates | ${title}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Place favicon.ico in the root directory -->
+</head>
+<body>
+    ${!!is_logged_in ? `
+        <div class="navbar-end">
+            <a class="navbar-item" href='/users/logout'>LOGOUT</a>
+        </div>
+    ` : `
+        <div class="navbar-end">
+            <a class="navbar-item" href='/users/login'>LOGIN</a>
+        </div>
+        <div class="navbar-end">
+            <a class="navbar-item" href='/users/signup'>SIGNUP</a>
+        </div>
+    `}
+
+    <h1>${title}</h1>
+    <main class="container">${partial}</main>
+</body>
+</html>
